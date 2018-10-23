@@ -45,14 +45,16 @@ SelectedPointsPublisher::~SelectedPointsPublisher()
 
 void SelectedPointsPublisher::updateTopic()
 {
-    nh_.param("frame_id", tf_frame_, std::string("/base_link"));
+    nh_.param("/selected_points_publisher/frame_id", tf_frame_, std::string("/base_link"));
+    ROS_INFO_STREAM("Frame id: " << tf_frame_);
     std::string cloud_topic;
-    nh_.param("source_cloud_topic", cloud_topic, std::string("/velodyne_points"));
+    nh_.param("/selected_points_publisher/source_cloud_topic", cloud_topic, std::string("/cloud"));
+    ROS_INFO_STREAM("Source cloud: " << cloud_topic);
 
-    rviz_cloud_topic_ = std::string("/rviz_selected_points");
-    real_cloud_topic_ = std::string("/real_selected_points");
+    rviz_cloud_topic_ = std::string("/selected_points_publisher/rviz_selected_points");
+    real_cloud_topic_ = std::string("/selected_points_publisher/real_selected_points");
     subs_cloud_topic_ = cloud_topic;
-    bb_marker_topic_ = std::string("visualization_marker");
+    bb_marker_topic_ = std::string("/selected_points_publisher/visualization_marker");
 
     rviz_selected_pub_ = nh_.advertise<sensor_msgs::PointCloud2>( rviz_cloud_topic_.c_str(), 1 );
     real_selected_pub_ = nh_.advertise<sensor_msgs::PointCloud2>( real_cloud_topic_.c_str(), 1 );
